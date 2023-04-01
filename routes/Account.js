@@ -19,7 +19,7 @@ Router.post('/login',async(req,res)=>{
           const cmp = await bcrypt.compare(req.body.password, user.password);
           if (cmp) {
             //   ..... further code to maintain authentication like jwt or sessions
-           return res.send("Auth Successful");
+           return res.json({data:"Auth Successful"});
           } else {
             return res.send("Wrong email or password.");
           }
@@ -32,18 +32,19 @@ Router.post('/login',async(req,res)=>{
       }
     });
     Router.post('/register',async (req,res)=>{
-        try{const Userdata = User.findOne({email:req.body.email});
-        if(Userdata){
+        try{const Userdata = await User.findOne({email:req.body.email});
+        console.log(Userdata)
+        if(Userdata &&  Userdata !=('null' || 'undefined')){
             return res.json({data:"duplicate"})
         }
             const user =await User.create(req.body);
                  //const name =req.body.name
                  //const token = jwt.sign( {"userId":name} ,process.env.ACCESS_TOKEN, { expiresIn: '24h' });
-                return res.redirect('/bid/auctions')   
+                return res.json({data:"succefull"})   
             }
         catch(error){
             if (error.code === 11000){
-                 return res.status(500).redirect('/login/login');
+                 return res.status(500).json({data:error});
             }
           throw error;
         }}) 
