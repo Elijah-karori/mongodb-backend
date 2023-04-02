@@ -5,6 +5,7 @@ const auctionSchema = new mongoose.Schema({
     startingBid: Number,
     currentBid: Number,
     image: String,
+    username: String,
   });
   
   const Auction = mongoose.model('Auction', auctionSchema);

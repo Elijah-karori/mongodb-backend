@@ -1,26 +1,23 @@
-const router = require('express').Router()
-const mongoose =require('mongoose')
-const Auction =require('../models/bid')
-const dbConnect =async ()=>{
-    await mongoose.createConnection("mongodb+srv://elijah:elijah@cluster0.oyewpgw.mongodb.net/?retryWrites=true&w=majorityauction", )
-    console.log(mongoose.connection.db)
-}
-dbConnect()
+const router = require('express').Router()//  server accept route request
+const Auction =require('../models/bid')// connect to auction model and send CRUD (create, retrieve, update, delete) operations to database
 
-
-
+// biding route to place a bid post request
 router.post('/bid', async (req, res) => {
   try {
-    const auction = await Auction.find({name:req.body.name});
+    //check if auction is available
+    const auction = await Auction.findOne({name:req.body.name});
+    //if auction not true unavailable
     if (!auction) {
       return res.status(404).send('Auction not found');
-    }
-    if (req.body.bidAmount <= auction[0].currentBid) {
+    }console.log(auction)
+    // auction avaiable and check if current bid is greater than the user bid
+    if (req.body.bidAmount <= auction.currentBid) {
       return res.status(400).send('Bid amount must be higher than current bid');
-    }
+    }// bid is higher than current bid and update the user bid as the current bid
    auction.currentBid = req.body.bidAmount; 
-   console.log(auction[0])
-     await Auction.updateOne({name:auction[0].name}, { currentBid: req.body.bidAmount});
+   console.log(auction)
+   // update to database
+    await Auction.updateOne({name:auction.name}, { currentBid: req.body.bidAmount, username:req.body.username});
    
     res.status(200).send('Bid successful');
   } catch (err) {
@@ -35,6 +32,10 @@ router.post('/charge', async (req, res) => {
     console.log(auction)
     if (!auction) {
       return res.status(404).send('Auction not found');
+    }
+    const winnerName=req.body.username
+    if(auction.username != winnerName || (null || undefined )){
+      return res.status(404).send('username not found');
     }
    
     await Auction.findOneAndUpdate({name:auction.name}, {
