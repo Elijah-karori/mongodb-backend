@@ -37,10 +37,6 @@ router.post('/charge', async (req, res) => {
     if(auction.username != winnerName || (null || undefined )){
       return res.status(404).send('username not found');
     }
-   
-    await Auction.findOneAndUpdate({name:auction.name}, {
-      currentBid: auction.startingBid,
-    });
      const amount = auction.currentBid; 
     res.status(200).send('Payment with MPESA send money (07 XXXXXXXX)or pochi la biashara. Amount: '+ amount);
   } catch (err) {
