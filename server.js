@@ -13,6 +13,7 @@ const BidRouter =require('./routes/bids')
 dotenv.config() 
 //enable to read the request.body data
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(cors());
 //intiate Database connection
 dbConnect()
 
