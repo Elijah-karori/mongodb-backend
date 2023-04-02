@@ -39,7 +39,9 @@ Router.post('/login',async(req,res)=>{
         if(Userdata &&  Userdata !=('null' || 'undefined')){
             return res.json({data:"duplicate"})
         }
-            const user =await User.create(req.body);
+       const salt =await bcrypt.genSalt(10)
+        const pass = await bcrypt.hash(req.body.password,salt)
+            const user =await User.create({name:req.body.name,email:req.body.email,password:pass});
                  //const name =req.body.name
                  //const token = jwt.sign( {"userId":name} ,process.env.ACCESS_TOKEN, { expiresIn: '24h' });
                 return res.json({data:"succefull"})   
