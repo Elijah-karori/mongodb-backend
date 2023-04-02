@@ -16,7 +16,9 @@ Router.post('/login',async(req,res)=>{
             if(!req.body.password || !user.password){
                 return res.send('require password')
             }
+
           const cmp = await bcrypt.compare(req.body.password, user.password);
+          console.log(cmp)
           if (cmp) {
             //   ..... further code to maintain authentication like jwt or sessions
            return res.json({data:"Auth Successful"});
