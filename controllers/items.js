@@ -1,4 +1,4 @@
-const Item =require('../models/items')
+const Item =require('../models/items')//CRUD operation
 exports.getAllItems = async () => {
 //find all items using mongoose find function
     return await Item.find();
@@ -9,15 +9,15 @@ exports.getAllItems = async () => {
     return await Item.create(item);
   };
   //find  item using mongoose  function return one unique item
-  exports.getItemById = async (id) => {
+  exports.getItem = async (id) => {
     
-    return await Item.findById(id);
+    return await Item.findOne(id);
   };
-   
+   //update item from database by a variable id
   exports.updateItem = async (id, item) => {
     return await Item.findByIdAndUpdate(id, item);
   };
-   
+   //delete item from database by a variable id
   exports.deleteItem = async (id) => {
     return await Item.findByIdAndDelete(id);
   };

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body> 
+    <header> <h1> farm auction farm </h1></header>
+    <main>
+       
+        <div  class="login-container">
+         <div class="login-left">
+             <!-- Left side content here -->  
+           </div>
+           <div class="login-right">
+         <section id="poster-side">
+              <h1>login</h1>
+              <% if (data) { %>
+ <p><% data %></p>
+                <% } %>
+         <form id="login-form" action="/login/login" method="post">
+           <input id="username" name="name" type="text" placeholder="username" required>
+            <input id="email" name="email" type="email" placeholder="enter email" required>
+            <input id="password" name="password" type="password" placeholder="enter password" required>
+            <label for="accessAsSeller">AccessAs Seller</label><input id="accessAsSeller" name="accesssAs" type="radio" value="seller" >
+            <label for="accessAsBuyer">AccessAs Admin</label><input id="accessAsAdmin" name="accesssAs" type="radio" value="admin" >
+         <button type="submit" formaction="/login/login">login</button>
+         </form>
+         <br>
+         <a href="/login/register"><button> register</button></a>
+     
+         </section>
+         </div>
+         </div>
+    </main>
+    
+    <footer>
+        &copy; My Website <%= new Date().getFullYear() %>
+    </footer>
+</body>
+</html>

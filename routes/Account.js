@@ -1,34 +1,58 @@
-const Router= require('express').Router();
-const User = require('../models/account')
-const jwt = require("jsonwebtoken");
-const bcrypt=require('bcrypt')
-
+const Router= require('express').Router();// to allow for route operations
+const User = require('../models/account')// mongodb CRUD operations
+const bcrypt=require('bcrypt')// to encrypt the passord and verify it
+const jwt=require("jsonwebtoken")
+// route the default request
 Router.get('/',(req,res)=>{
-    const id =req.body.id;
-   res.status(404).json({"token": "hello"});         // Only this runs.
+   res.status(200).render('login',{data: "hello", title:"Login"});         // Only this runs.
       }
 );
-Router.post('/login',async(req,res)=>{
+
+// route login request url
+Router.post('/login',async(req,res, next)=>{
     try {
-        const user = await User.findOne({ email: req.body.email });//check user is available
-        console.log(user);
+      if(req.body.accessAs){
+        return res.render("login",{data:'require accessAs', title:"login"});
+      }
+      //check user from database
+        const user = await User.findOne({ email: req.body.email  });
+        console.log(req.body);
+        //check if user is true
+        if(user.name != req.body.name ){
+          return res.render("login",{data:'require password', title:"login"})
+        }
         if (user) {
           //if password is not entered or undefined
             if(!req.body.password || !user.password){
-                return res.send('require password')
+                return res.render("login",{data:'require password', title:"login"})
             }
           //verify password using bcrypt
           const cmp = await bcrypt.compare(req.body.password, user.password);
           console.log(cmp)
 
           if (cmp) {
-            //   ..... further code to maintain authentication like jwt or sessions
-           return res.json({data:"Auth Successful"});
+            
+            const payload ={name: req.body.name, accessAs:req.body.accessAs}
+            const token =jwt.sign(payload , '09f26e402586e2faa8da4c98a35f1b20d6b033c60', { expiresIn: '180000s' })
+           //send the access token to the client inside a cookie
+               res.cookie("jwt", token, {secure: true, httpOnly: true})
+               if(req.body.accessAs==="seller"){
+                return res.redirect('/items/')
+               }
+               else if(req.body.name==="admin" || (req.body.accessAs==="admin")){
+                return res.redirect('/admin')
+               }else{
+  //   return a success 200 code and message
+           return res.redirect("/bid/auctions");
+               }
+          
           } else {
-            return res.send("Wrong email or password.");
+            //provide message for wrong password 
+            return res.render("login",{data:'wrong Password', title:"login"});
           }
         } else {
-         return  res.send("Wrong username or password.");
+          // provide message for wrong username or password
+         return  res.render("register",{data:'wrong password or email', title:"login"});
         }
         //catch error in server 
       } catch (error) {
@@ -36,23 +60,57 @@ Router.post('/login',async(req,res)=>{
        return res.status(500).send("Internal Server error Occured");
       }
     });
+    //get routr to register
+    Router.get('/register',(req,res)=>{
+      res.status(200).render('register',{data: "hello", title:"Register"});         // Only this runs.
+         }
+   );
+    //route register request url
     Router.post('/register',async (req,res)=>{
-        try{const Userdata = await User.findOne({email:req.body.email});
-        console.log(Userdata)
+        try{console.log(req.body)
+          if(req.body.accessAs){
+            return res.render("login",{data:'require accessAs', title:"login"});
+          }
+          //check user email from database
+          const Userdata = await User.findOne({email:req.body.email});
+        console.log(Userdata);
+        
+        //check if userdata is available
         if(Userdata &&  Userdata !=('null' || 'undefined')){
-            return res.json({data:"duplicate"})
+            return res.render("login",{data:'user email exist', title:"login"})// message response
         }
+        
         //masking the password using bcrypt
-       const salt =await bcrypt.genSalt(10)
-        const pass = await bcrypt.hash(req.body.password,salt)
+       const salt =await bcrypt.genSalt(10)//generrate the key for encryption
+       if(req.body.password== undefined){
+        
+        return res.render('register', {data:"empty password", title:"Register"})
+       }
+        const pass = await bcrypt.hash(req.body.password,salt)// encrypt the password using bcrypt hash
         //adding new user to database
             const user =await User.create({name:req.body.name,email:req.body.email,password:pass});
-                return res.json({data:"succefull"})   
+           const userName= req.body.name
+           const token =jwt.sign({username:req.body.name, accessAs:req.body.accessAs}, '09f26e402586e2faa8da4c98a35f1b20d6b033c60', { expiresIn: '180000s' })
+           //send the access token to the client inside a cookie
+               res.cookie("jwt", token, {secure: true, httpOnly: true})
+               if(req.body.name==="admin" && (req.body.access==="admin")){
+                return res.redirect('/admin')
+               }
+               if(req.body.accessAs === "seller"){
+                return res.redirect('/items')
+               }
+            //   return a success 200 code and message
+           return res.redirect("/bid/auctions");// message response  
             }
         catch(error){
+          //error message 
             if (error.code === 11000){
                  return res.status(500).json({data:error});
             }
           throw error;
         }}) 
+        Router.get('/logout', (req, res) => {
+          res.clearCookie('auth_token');
+          res.redirect('/login');
+        });
 module.exports=Router

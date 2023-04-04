@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/index.css"><!--css files -->
+
+</head>
+<body>
+    <header><!--top bar for navigation -->
+        <nav>
+            <ul>
+                <li><a href="/bid/auctions">Auctions</a></li><!--navigation to route GET /auctions -->
+                <li><a href="/bid/bids">My Bids</a></li><!--navigation to route GET /bids -->
+                <li><a href="/bid/charge">Pay bids</a></li><!--navigation to route GET /charge -->
+            </ul>
+            <!--search bar  -->
+            <form action="/bid/auction" method="get">
+                <input type="text" name="name" placeholder="enter a auction">
+                <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
+            </form>
+<a href="/login/" ></a>
+        </nav>
+    </header>
+    
+    <main>
+        <!--enter main data from the server-->
+
+        <!--check array if empty or valid -->
+        <% if (Array.isArray(data) && data.length !== 0) { %>
+            <!--populate data to html tags -->
+            <h1><%= title %></h1>
+            <div class="container">
+              <% data.forEach(function(item) { %>
+                <div class="card">
+                  <img src="<%= item.image %>" alt="<%= item.name %>">
+                  <h3><%= item.name %></h3>
+                  <p><%= item.description %></p>
+                  <p><strong>Amount:</strong> $<%= item.currentBid.toFixed(2) %></p>
+                  <%= message %>
+                </div>
+              <% }) %>
+            </div>
+            <!-- check if data is null-->
+            <% } else if (data == null ) { %>
+                <%= data %>
+                <h1> No data</h1>
+                 <!-- check if data is empty-->
+            <% } else if (data.length == 0 ) { %>
+                <%= data %>
+                 <!-- check if data content is bid heigher than current-->
+         <% } else if (data==="bid heigher than current" ) { %>
+               <%= data %>
+                <!-- check if data content is auction not found-->
+        <% } else if (data==="auction not found" ){ %>
+                <%= data %>
+                 <!-- check if data content is user not found-->
+        <% } else if (data==="User not found" ){ %>
+                  <%= data %>
+                   <!-- check if data is single json object-->
+ <% } else if (data) { %>
+    <%= data %>
+     <!-- populate the data-->
+    <div class="card">
+        <img src="/<%= data.name %>" alt="<%= data.name %>">
+        <h3><%= data.name %></h3>
+        <p><%= data.description %></p>
+        <p><strong>Price:</strong> $<%= data.currentBid.toFixed(2) %></p>
+            <label><%= message %></label>
+         
+            <% } else { %>
+                <p>no auction available</p>
+              <% } %> 
+    </div> 
+
+</main>
+    
+<footer>
+    &copy; My Website <%= new Date().getFullYear() %>
+</footer>
+</body>
+</html>

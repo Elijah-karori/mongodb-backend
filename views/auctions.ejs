@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/index.css">
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/bid/auctions">Auctions</a></li>
+                <li><a href="/bid/bids">MyBids</a></li>
+                <li><a href="/bid/charge">Pay bids</a></li>
+            </ul>
+            <form action="/bid/auction" method="get">
+                <input type="text" name="name" placeholder="enter a auction">
+                <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
+            </form>
+        </nav>
+    </header>
+    
+    <main>
+        
+        <% if ( Array.isArray(data)&&data.length!= 0 ) { %>
+            <h1> <%= title %></h1>
+	<div class="container">
+		<% for (var i=0; i<data.length; i++) { %>
+			<div class="card">
+				<img src="<%= data[i].image %>" alt="<%= data[i].name %>">
+				<h3><%= data[i].name %></h3>
+				<p><%= data[i].description %></p>
+				<p><strong>Price:</strong> $<%= data[i].currentBid.toFixed(2) %></p>
+                <form action="/bid/bid" method="post">
+                    <input class="itemName" name="name" placeholder="<%= data[i].name %>" value="<%= data[i].name %>"readonly>
+                    <input name="bidAmount" placeholder="enter bid amount">
+
+				<button>Bid</button></form>
+			</div>
+		<% } %>
+	</div>
+ <% } else if (data==="bid heigher than current" ) { %>
+       <%= data %>
+<% } else if (data==="auction not found" ){ %>
+        <%= data %>
+<% } else if (data==="User not found" ){ %>
+          <%= data %>
+ <% } else if (data) { %>
+    <div class="card">
+        <img src="<%= data.image %>" alt="<%= data.name %>">
+        <h3><%= data.name %></h3>
+        <p><%= data.description %></p>
+        <p><strong>Price:</strong> $<%= data.currentBid.toFixed(2) %></p>
+        <form action="/bid/bid" method="post">
+            <input class="itemName" name="name" placeholder="<%= data.name %>" value="<%= data.name %>"readonly>
+            <input name="bidAmount" placeholder="enter bid amount">
+
+        <button>Bid</button></form>
+    </div> 
+
+    
+         <% } else { %>
+                <p>no auction available</p>
+              <% } %>
+    </main>
+    
+    <footer>
+        &copy; My Website <%= new Date().getFullYear() %>
+    </footer>
+</body>
+</html>
