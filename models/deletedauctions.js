@@ -1,6 +1,6 @@
 const mongoose =require('mongoose')//library to communicate with database
 //create a data schema to give parameters for CRUD operations, database enteries
-const auctionSchema = new mongoose.Schema({
+const deletedauctionSchema = new mongoose.Schema({
     name: String,//field data type
     description: String,//field data type
     startingBid: Number,//field data type
@@ -9,5 +9,5 @@ const auctionSchema = new mongoose.Schema({
     username: String,//field data type
   });
   
-  const Auction = mongoose.model('Auction', auctionSchema);// provide name to schema 
-module.exports= Auction//export as module
+  const Deletedauction = mongoose.model('DeletedAuction', deletedauctionSchema);// provide name to schema 
+module.exports= Deletedauction//export as module

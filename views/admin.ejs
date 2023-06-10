@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/index.css">
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/admin/">Auctions</a></li>
+                <li><a href="/admin/bids">All Bids</a></li>
+                <li><a href="/admin/FormData?action=auction" >Add Auction</a></li>
+                <li><a href="/admin/FormData?action=delete" >delete auctions</a></li>
+            </ul>
+            <form action="/admin/auction" method="get">
+                <input type="text" name="name" placeholder="enter a auction">
+                <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
+            </form>
+            <a id="logout" style="align-items: center;justify-content: center;padding: 5px;color: aqua; background-color:rgb(13, 97, 2) ;margin: 10px;" href="/login/logout"> Log  out</a>
+        </nav>
+    </header>
+    
+    <main>
+        
+        <% if ( Array.isArray(data)&&data.length!= 0 ) { %>
+            <h1> <%= title %></h1>
+	<div class="container">
+		<% for (var i=0; i<data.length; i++) { %>
+			<div class="card">
+				<img src="<%= data[i].image %>" alt="<%= data[i].name %>" height="15" width="20">
+				<h3><%= data[i].name %></h3>
+				<p><%= data[i].description %></p>
+				<p><strong>Price:</strong> Kes <%= data[i].startingBid %></p>
+                <p><strong>current Bid:</strong> Kes<%= data[i].currentBid.toFixed(2) %></p>
+                <form action="/admin/FormData" method="get">
+                    <input class="itemName" name="name" placeholder="<%= data[i].name %>" value="<%= data[i].name %>"readonly>
+                    <input class="itemName" name="price" placeholder="<%= data[i].startingBid %>" value="<%= data[i].startingBid %>"readonly>
+                    <button type="submit" name="action" value="delete">Delete <%= btnvalue %></button>
+                    <button type="submit" name="action" value="update">update <%= btnvalue %></button>
+				</form>
+			</div>
+		<% } %>
+	</div>
+    <% } else if (data.length == 0 ||(data == [] ) ) { %> 
+        <h1> No data</h1>
+        <%= data %>
+ <% } else if (data==="bid heigher than current" ) { %>
+       <%= data %>
+<% } else if (data==="auction not found" ){ %>
+    <h3>No auctions</h3>
+        <%= data %>
+<% } else if (data==="User not found" ){ %>
+          <%= data %>
+ <% } else if (data) { %>
+    <div class="card">
+        <img src="<%= data.image %>" alt="<%= data.name %>">
+        <h3><%= data.name %></h3>
+        <p><%= data.description %></p>
+        <p><strong>Price:</strong> Kes<%= data.startingBid %></p>
+        <p><strong>currentBid:</strong> Kes<%= data.currentBid.toFixed(2) %></p>
+        <form action="/admin/FormData" method="get">
+            <input class="itemName" name="name" placeholder="<%= data.name %>" value="<%= data.name %>"readonly>
+            <input class="itemName" name="price" placeholder="<%= data.startingBid %>" value="<%= data.startingBid %>"readonly>
+            <button type="submit" name="action" value="delete">Delete auction</button>
+            <button type="submit" name="action" value="edit">update auction</button>
+        </form>
+    </div> 
+
+    
+         <% } else { %>
+                <p>no auction available</p>
+              <% } %>
+    </main>
+    
+    <footer>
+        &copy; My Website <%= new Date().getFullYear() %>
+    </footer>
+</body>
+</html>

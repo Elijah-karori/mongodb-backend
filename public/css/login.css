@@ -1,0 +1,67 @@
+.login-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .login-left {
+    flex: 1;
+    background-image: url('/depositphotos_40221619-stock-illustration-farm.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+    /* Left side styles here */
+  
+  .login-left span{
+    padding: 20px;
+    color: #000;
+    font-size: larger;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  .login-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    /* Right side styles here */
+  }
+  
+  .login-right h2 {
+    margin-bottom: 20px;
+  }
+  
+  .login-right form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-right input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background-color: transparent;
+    font-size: 16px;
+  }
+  
+  .login-right button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .login-right button:hover {
+    background-color: #3e8e41;
+  }
+  

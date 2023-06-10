@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/index.css">
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/items/">Items</a></li>
+                <li><a href="/items/create?action=create" >upload Items</a></li>
+                <li><a href="/items/items" >My Items</a></li>
+                <li><a href="/items/update?action=update" >Update Items</a></li>
+                <li><a href="/items/delete?action=delete" >delete item</a></li>
+            </ul>
+            <form action="/items/item" method="get">
+                <input type="text" name="name" placeholder="enter item">
+                <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
+            </form>
+            <a id="logout" style="align-items: center;justify-content: center;padding: 5px;color: aqua; background-color:rgb(13, 97, 2) ;margin: 10px;" href="/login/logout"> Log  out</a>
+        </nav>
+    </header>
+    
+    <main>
+        <% if (data == null ) { %>
+         <h1>no data         </h1>
+        <% } %>
+        <% if ( Array.isArray(data)&&(data.length!= 0 )) { %>
+            <h1> <%= title %></h1>
+	<div class="container">
+		<% for (var i=0; i<data.length; i++) { %>
+			<div class="card">
+				<img src="<%= data[i].image %>" alt="<%= data[i].name %>">
+				<h3>name: <%= data[i].name %></h3>
+				<p><strong>Description:</strong><%= data[i].description %></p>
+				<p><strong>Price:</strong> $<%= data[i].price.toFixed(2) %></p>
+                <p> <strong>Seller: </strong> <%= data[i].seller %></p>
+			</div>
+		<% } %>
+	</div>
+       
+    <% } else if (data.length == 0 ||(data == [] ) ) { %> 
+        <h1> No data</h1>
+        <%= data %>
+ <% } else if (data==="item not found" ||(data==="successful")) { %>
+       <%= data %>
+<% } else if (data==="auction not found" ||(data==="User not found" ) ){ %>
+    <p>User Data not found</p>
+        <%= data %>
+ <% } else if (data==="auction found" ||(data==="User found" ) ){ %>
+            <p> item on Auction </p>
+                <%= data %>
+ <% } else if (data) { %>
+    <div class="card">
+        <img src="<%= data.image %>" alt="<%= data.name %>">
+        <h3>name: <%= data.name %></h3>
+        <p><strong>Description:</strong><%= data.description %></p>
+        <p><strong>Price:</strong> $<%= data.price.toFixed(2) %></p>
+       <p> <strong>Seller: </strong> <%= data.seller %></p>
+    </div> 
+
+    
+         <% } else { %>
+                <p>no auction available</p>
+              <% } %>
+    </main>
+    
+    <footer>
+        &copy; My Website <%= new Date().getFullYear() %>
+    </footer>
+</body>
+</html>

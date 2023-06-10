@@ -1,8 +1,9 @@
 const  mongoose  = require("mongoose");
 const{ Schema }= mongoose
 const itemSchema = new Schema({
-    name: String,
-    id: {
+    description: String,
+  image: String,
+    name: {
       type: String,
       required: true,
       unique: false
@@ -12,6 +13,8 @@ const itemSchema = new Schema({
         required: true,
         unique:false
       },
+      seller:String,
+      
       added: { type: Date, default: Date.now },
   });
 

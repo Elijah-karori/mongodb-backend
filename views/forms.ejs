@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/index.css">
+    <title>Document</title>
+</head>
+<style>
+    form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+form label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  margin-bottom: 16px;
+}
+
+form button {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #1a73e8;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+form button:hover {
+  background-color: #0d47a1;
+}
+
+</style>  <header>
+    <nav>
+        <ul>
+            <li><a href="/items/">Items</a></li>
+            <li><a href="/items/create?action=create">upload Items</a></li>
+            <li><a href="/items/items">My Items</a></li>
+            <li><a href="/items/update?action=update">Update Items</a></li>
+            <li><a href="/items/delete?action=delete">delete item</a></li>
+        </ul>
+        <form action="/items/item" method="get">
+            <input type="text" name="name" placeholder="enter item">
+            <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
+        </form>
+        <a id="logout" style="align-items: center;justify-content: center;padding: 5px;color: aqua; background-color:rgb(13, 97, 2) ;margin: 10px;" href="/login/logout"> Log  out</a>
+    </nav>
+</header>
+<body>
+
+    <form  method="post">
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+      
+        <label for="price">price:</label>
+        <input type="text" id="price" name="price" required>
+        <% if (data==="create") { %>
+          <label for="seller">seller Name:</label>
+          <input type="text" id="seller" name="seller" placeholder="enter your name" required>
+          
+        <% } %>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required>
+        <label for="image">image Url:</label>
+        <input type="text" id="image" name="image" required>
+      
+        <button action="/items/<%= data %>"  type="submit">Submit</button>
+        <%= data %>
+      </form>
+      
+</body>
+</html>

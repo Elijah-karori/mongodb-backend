@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/index.css">
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul> <!-- navigation links-->
+                <li><a href="/bid/auctions">Auctions</a></li> <!-- GET /auctions-->
+                <li><a href="/bid/bids">My Bids</a></li><!-- GET /bids-->
+                <li><a href="/bid/charge">Pay bids</a></li><!-- GET /charge-->
+            </ul>
+            <!--search bar GET /auction-->
+            <form action="/bid/auction" method="get">
+                <input type="text" name="name" placeholder="enter a auction">
+                <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
+            </form>
+            <a id="logout" style="align-items: center;justify-content: center;padding: 5px;color: aqua; background-color:rgb(13, 97, 2) ;margin: 10px;" href="/login/logout"> Log  out</a>
+        </nav>
+    </header>
+    
+    <main>
+        
+        <% if ( Array.isArray(data)&&data.length!= 0 ) { %>
+            <h1> <%= title %></h1>
+	<div class="container">
+		<% for (var i=0; i<data.length; i++) { %>
+			<div class="card">
+				<img src="<%= data[i].image %>" alt="<%= data[i].name %>">
+				<h3><%= data[i].name %></h3>
+				<p><%= data[i].description %></p>
+				<p><strong>Amount:</strong> $<%= data[i].currentBid %></p>
+                <form action="/bid/charge" method="post">
+                    <label><%= message %></label>
+                    <input class="itemName" name="name" placeholder="<%= data[i].name %>" value="<%= data[i].name %>"readonly>
+				<button>pay here</button></form>
+			</div>
+		<% } %>
+	</div>
+    <% } else if (data==="bid heigher than current" ) { %>
+        <%= data %>
+ <% } else if (data===" auction not found" || (data===" User not found") ){ %>
+         <%= data %>
+ 
+ <% } else if (data) { %>
+    <div class="card">
+        <img src="<%= data.image %>" alt="<%= data.name %>">
+        <h3><%= data.name %></h3>
+        <p><%= data.description %></p>
+        <p><strong>Price:</strong> $<%= data.currentBid %></p>
+        <form action="/bid/charge" method="post">
+            <label><%= message %></label>
+            <input class="itemName" name="name" placeholder="<%= data.name %>" value="<%= data.name %>"readonly>
+            <button>Pay here</button></form>
+    </div> 
+
+      
+         <% } else { %>
+                <p>no auction available</p>
+              <% } %>
+    </main>
+    
+    <footer>
+        &copy; My Website <%= new Date().getFullYear() %>
+    </footer>
+</body>
+</html>
+

@@ -1,4 +1,4 @@
-const  mongoose  = require("mongoose");
+const  mongoose  = require("mongoose");// library for CRUD operations
 
 const UserSchema = new mongoose.Schema({
     name: String,
@@ -9,6 +9,8 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
       },
+      accessAs:{type:String,
+        required:false},
       joined: { type: Date, default: Date.now },
   });
 
