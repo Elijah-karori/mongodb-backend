@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
       },
       accessAs:{type:String,
-        required:true},
+        required:false},
       joined: { type: Date, default: Date.now },
   });
 

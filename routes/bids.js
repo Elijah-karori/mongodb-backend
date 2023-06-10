@@ -8,7 +8,7 @@ router.get('/auction',auth, async (req, res) => {
     //get auctions from a database 
     const auction = await Auction.findOne({name:Requestname});
     if(!auction){
-      return res.render('auctions',{data: " auction not found", title:"auction"})
+      return res.render('auctions',{data: "auction not found", title:"auction"})
     }
     //response with all auctions
     res.render('auctions', {data:auction, title:"auctions"});
@@ -21,7 +21,14 @@ router.get('/auction',auth, async (req, res) => {
 router.get('/bids',auth, async (req, res) => {
   try {
     //get auctions from a database 
+    console.log(req.user.name)
     const bids = await Auction.find({username:req.user.name});
+    console.log(bids)
+
+    if(bids.length === 0){
+      console.log(bids)
+      return res.render('auctions', {data:"auction not found", title:"bids"});
+    }
     //response with all auctions
     res.render('auctions', {data:bids, title:" My bids"});
   } catch (err) {
@@ -86,6 +93,10 @@ router.get('/auctions',auth, async (req, res) => {
   try {
     //get auctions from a database 
     const auctions = await Auction.find();
+
+    if (auctions.length===0) {
+      return res.render('auctions', {data:"auction not found", title:"bids"});// response message
+    }
     //response with all auctions
     res.render('auctions', {data:auctions, title:"auctions"});
   } catch (err) {

@@ -19,7 +19,7 @@
                 <input type="text" name="name" placeholder="enter a auction">
                 <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
             </form>
-<a href="/login/" ></a>
+            <a id="logout" style="align-items: center;justify-content: center;padding: 5px;color: aqua; background-color:rgb(13, 97, 2) ;margin: 10px;" href="/login/logout"> Log  out</a>
         </nav>
     </header>
     
@@ -34,9 +34,10 @@
               <% data.forEach(function(item) { %>
                 <div class="card">
                   <img src="<%= item.image %>" alt="<%= item.name %>">
-                  <h3><%= item.name %></h3>
-                  <p><%= item.description %></p>
-                  <p><strong>Amount:</strong> $<%= item.currentBid.toFixed(2) %></p>
+                  <h3>name: <%= item.name %></h3>
+                  <p><strong>Description:</strong><%= item.description %></p>
+                  <p><strong>Amount:</strong> Kes<%= item.currentBid.toFixed(2) %></p>
+                  <h3>winner: <%= item.username %></h3>
                   <%= message %>
                 </div>
               <% }) %>
@@ -63,9 +64,10 @@
      <!-- populate the data-->
     <div class="card">
         <img src="/<%= data.name %>" alt="<%= data.name %>">
-        <h3><%= data.name %></h3>
-        <p><%= data.description %></p>
-        <p><strong>Price:</strong> $<%= data.currentBid.toFixed(2) %></p>
+        <h3>name: <%= data.name %></h3>
+        <p><strong>Description:</strong><%= data.description %></p>
+        <p><strong>Price:</strong> Kes<%= data.currentBid.toFixed(2) %></p>
+        winner: <%= data.username %>
             <label><%= message %></label>
          
             <% } else { %>

@@ -16,10 +16,14 @@
            <div class="login-right">
          <section id="poster-side">
               <h1>Register</h1>
+              <% if (data) { %>
+                <p style="font-size: larger;color: rgb(238, 44, 44);"><%= data %></p>
+                               <% } %>
          <form id="login-form" action="/login/register" method="post">
            <input id="username" name="name" type="text" placeholder="username" required>
             <input id="email" name="email" type="email" placeholder="enter email" required>
             <input id="password" name="password" type="password" placeholder="enter password" required>
+         
          <button type="submit" formaction="/login/register">Register</button>
          </form>
          <br>

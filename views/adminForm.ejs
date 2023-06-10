@@ -61,27 +61,28 @@ form button:hover {
             <input type="text" name="name" placeholder="enter a auction">
             <button type="submit"><img src="/search-solid.svg" alt="search_icon" width="20" height="15"> search</button>
         </form>
+        <a id="logout" style="align-items: center;justify-content: center;padding: 5px;color: aqua; background-color:rgb(13, 97, 2) ;margin: 10px;" href="/login/logout"> Log  out</a>
     </nav>
 </header>
 <body>
 
     <form action="/admin/<%= data %>"  method="post">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="name" name="name" value="<%= items.name %>" required>
       <% if (data==="auction") { %>
         <label for="startingBid">starting Bid:</label>
-        <input type="text" id="startingBid" name="startingBid" required>
-        <label for="currentBid">current Bid:</label>
-        <input type="text" id="currentBid" name="currentBid" required>
+        <input type="text" id="startingBid" name="startingBid"  required>
         
       <% } %>
         <label for="price">price:</label>
-        <input type="text" id="price" name="price" required>
-      
-        <label for="description">Description:</label>
+        <input type="text" id="price" name="price"value="<%= items.price %>" required>
+      <% if (items.action != 'delete') { %>
+         <label for="description">Description:</label>
         <input type="text" id="description" name="description" required>
         <label for="image">image Url:</label>
-        <input type="text" id="image" name="image" required>
+        <input type="text" id="image" name="image" >
+      <% } %>
+      
       
         <button type="submit" >Submit</button>
         <%= data %>

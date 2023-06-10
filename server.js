@@ -28,13 +28,16 @@ app.use(cookieParser());
 app.use(express.static('public'));
 //intiate Database connection
 dbConnect()
-
+//redirect to login page
+app.get('/',(req, res)=>{
+    res.redirect('/login/')
+})
 //route the user request and response urls
 app.use('/login', AccountRouter);// user login and register route
 app.use('/items', ItemsRouter);//items route
 app.use('/bid', BidRouter);//auction route
 app.use('/admin', AdminRouter);
 
-//start the server on port 3000
-app.listen(80)
+//start the server on port 80
+app.listen(3000)
 

@@ -9,15 +9,12 @@ exports.getAllItems = async () => {
     return await Item.create(item);
   };
   //find  item using mongoose  function return one unique item
-  exports.getItem = async (id) => {
+  exports.getItem = async (item) => {
     
-    return await Item.findOne(id);
+    return await Item.findOne(item);
   };
    //update item from database by a variable id
   exports.updateItem = async (id, item) => {
-    return await Item.findByIdAndUpdate(id, item);
+    return await Item.findOneAndUpdate(id, item, { new: true });
   };
-   //delete item from database by a variable id
-  exports.deleteItem = async (id) => {
-    return await Item.findByIdAndDelete(id);
-  };
+  

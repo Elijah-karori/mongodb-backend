@@ -11,21 +11,23 @@ Router.get('/',(req,res)=>{
 // route login request url
 Router.post('/login',async(req,res, next)=>{
     try {
-      if(req.body.accessAs){
-        return res.render("login",{data:'require accessAs', title:"login"});
-      }
       //check user from database
         const user = await User.findOne({ email: req.body.email  });
         console.log(req.body);
         //check if user is true
-        if(user.name != req.body.name ){
-          return res.render("login",{data:'require password', title:"login"})
+        console.log(user)
+        if(!user){
+return res.render('login', {data: "Wrong email", title:"login"})
+        }
+        console.log(req.body.name)
+        console.log(user.name)
+        
+        if(user.name !== req.body.name ){
+          return res.render("login",{data:'require coreect username', title:"login"})
         }
         if (user) {
           //if password is not entered or undefined
-            if(!req.body.password || !user.password){
-                return res.render("login",{data:'require password', title:"login"})
-            }
+      
           //verify password using bcrypt
           const cmp = await bcrypt.compare(req.body.password, user.password);
           console.log(cmp)
@@ -36,10 +38,11 @@ Router.post('/login',async(req,res, next)=>{
             const token =jwt.sign(payload , '09f26e402586e2faa8da4c98a35f1b20d6b033c60', { expiresIn: '180000s' })
            //send the access token to the client inside a cookie
                res.cookie("jwt", token, {secure: true, httpOnly: true})
-               if(req.body.accessAs==="seller"){
+               console.log(req.body.accesssAs)
+               if(req.body.accesssAs=="seller"){
                 return res.redirect('/items/')
                }
-               else if(req.body.name==="admin" || (req.body.accessAs==="admin")){
+               else if(req.body.name=="admin" || (req.body.accesssAs==="admin")|| (req.body.name==="Admin")){
                 return res.redirect('/admin')
                }else{
   //   return a success 200 code and message
@@ -93,10 +96,10 @@ Router.post('/login',async(req,res, next)=>{
            const token =jwt.sign({username:req.body.name, accessAs:req.body.accessAs}, '09f26e402586e2faa8da4c98a35f1b20d6b033c60', { expiresIn: '180000s' })
            //send the access token to the client inside a cookie
                res.cookie("jwt", token, {secure: true, httpOnly: true})
-               if(req.body.name==="admin" && (req.body.access==="admin")){
+               if(req.body.name==="admin" && (req.body.accesssAs==="admin")){
                 return res.redirect('/admin')
                }
-               if(req.body.accessAs === "seller"){
+               if(req.body.accesssAs === "seller"){
                 return res.redirect('/items')
                }
             //   return a success 200 code and message

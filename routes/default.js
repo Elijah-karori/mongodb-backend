@@ -1,5 +1,8 @@
 const router = require('express').Router()//  server accept route request
-const Auction =require('../models/bid')
+const Auction =require('../models/bid');
+const Item = require("../models/items");
+const Deletedauction = require('../models/deletedauctions')
+const DeletedAuction = require('../models/deletedauctions')
 const auth =require("./auth")// connect to auction model and send CRUD (create, retrieve, update, delete) operations to database
 // route to get specific auction available
 const jwt = require('jsonwebtoken')//library  for authenticate 
@@ -27,23 +30,39 @@ return res.status(401).render('login',{data:"unaothorized", title:"login"})
     next()
   })
 };
-router.get('/FormData', authenticateAdminToken, async (req, res)=>{
-    console.log(req.query)
-    console.log(req.query.action);
-    let uri = req.query.action
-    res.render('adminForm' ,{data:uri, title:'form auction'});
-  })
+// route to get auctions available
+router.get('/',auth, async (req, res) => {
+  try {
+    //get auctions from a database 
+    const auctions = await Auction.find();
+    if(!auctions){
+      return res.render('admin',{data:"auction not found", title:"auction"})
+    }
+    if(auctions.length === 0){
+      console.log(auctions)
+      return res.render('admin', {data:"auction not found", title:"bids"});
+    }
+    //response with all auctions
+    const btnvalue='auction'
+    res.render('admin', {data:auctions,btnvalue:btnvalue, title:"auctions"});
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+});
 // route to get specific auctions
 router.get('/auction',auth, async (req, res) => {
   try {
     const Requestname=req.query.name
     //get auctions from a database 
-    const auction = await Auction.findOne({name:Requestname});
-    if(!auction){
-      return res.render('admin',{data: " auction not found", title:"auction"})
+    const auction = await Auction.find({name:Requestname});
+    console.log(auction)
+    if(!auction ||( auction.length==0)){
+      return res.render('admin',{data:"auction not found", title:"auction"})
     }
     //response with all auctions
-    res.render('admin', {data:auction, title:"auctions"});
+    const btnvalue='auction'
+    res.render('admin', {data:auction, btnvalue:btnvalue,title:"auctions"});
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal server error');
@@ -55,12 +74,21 @@ router.get('/bids',authenticateAdminToken, async (req, res) => {
     //get auctions from a database 
     const bids = await Auction.find();
     //response with all auctions
-    res.render('admin', {data:bids, title:" My bids"});
+    const btnvalue='bid'
+    res.render('admin', {data:bids, btnvalue:btnvalue,title:" My bids",});
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal server error');
   }
 });
+//to route form request
+router.get('/FormData', authenticateAdminToken, async (req, res)=>{
+  console.log(req.query)
+  console.log(req.query.action);
+  let uri = req.query.action
+  const items= req.query
+  res.render('adminForm' ,{data:uri, items:items, title:'form auction'});
+})
 // insert auction route to place a bid post request
 router.post('/auction',authenticateAdminToken, async (req, res) => {
   try {
@@ -74,7 +102,7 @@ router.post('/auction',authenticateAdminToken, async (req, res) => {
 // insert auction to database
     await Auction.create({name:req.body.name,
         description:req.body.description,
-        startingBid:req.body.startingBid,
+        startingBid:req.body.price,
         currentBid:req.body.startingBid,
         price:req.body.price,
         image:req.body.image,});
@@ -84,61 +112,47 @@ router.post('/auction',authenticateAdminToken, async (req, res) => {
     console.error(err);
     res.status(500).send('Internal server error');//send a response for error with 500 server error code
   }
-});// route for payment
+});// route for update auction
 router.post('/update',authenticateAdminToken, async (req, res) => {
   try {
     console.log(req.body)
     //check the auction from database
-    const auction = await Auction.find({name:req.body.name});
+    const auction = await Auction.findOne({name:req.body.name});
 
-    // provide  message for unavaiable auction
-    console.log(auction + "welcome to update")
     // check if auction is unavailable
     if (!auction) {
       return res.render('admin', {data:"auction not found", title:"auctions"});// response message
     }
-    //find the right bid for the user
-    const findUsername = username => auction.find(a => a.username === username)
-    const userBid=findUsername(req.body.name)
-    //provide username in a variable
-    console.log(auction.username)
     // update the auction
-       Auction.updateOne({username:req.body.name}, req.body)
+      const newAuction=await Auction.findOneAndUpdate({name:req.body.name}, {startingBid:req.body.price,description:req.body.description, image:req.body.image}, { new: true });
+      console.log(newAuction)
      // response
-    res.render('admin', {data:userBid, title:"auction update", });
+     const btnvalue='bid'
+    res.redirect('/admin/');
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal server error');
   }
 });
-// route to get auctions available
-router.get('/',auth, async (req, res) => {
-  try {
-    //get auctions from a database 
-    const auctions = await Auction.find();
-    //response with all auctions
-    res.render('admin', {data:auctions, title:"auctions"});
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal server error');
-  }
-});
+
 // delete auctions
 router.post('/delete', auth, async (req, res)=>{
-  try{ console.log("hello")
+  try{ console.log()
     //check the auction
-  const bids = await Auction.find({username:req.user.name});
- 
-  //find username for bid 
-  const findUsername = username => bids.find(a => a.username === username)
-  const userBid=findUsername(req.user.name)
-  //add deleted string to represent deleted , the auction is only delete manually from database just for record keeping of complaints 
-  const deletedName= ('deleted '+req.body.name)
- // update the auction name
- 
-  Auction.findOneAndDelete({name:req.body.name}, {name:deletedName}, )
-  //response with updated  auction
-  res.render('admin', {data:userBid, title:"delete Auction"});
+  const bids = await Auction.findOne({name:req.body.name});
+ console.log(bids)
+  // update the auction name
+ const deletedauctions = new DeletedAuction({
+  name:req.body.name,
+  username:bids.username,
+  currentBid:bids.currentBid,
+  startindBid:bids.startingBid,
+  description:req.body.description
+ })
+ await deletedauctions.save();
+ await Auction.deleteOne({name:bids.name});
+  //response with updated  auction list
+  res.redirect('/admin/');
 }
  catch (err) {
   console.error(err);
